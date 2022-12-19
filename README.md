@@ -413,7 +413,7 @@ You will be awarded extra points for the following:
 ```
 docker build --no-cache -t cibp_assgmnt_1_min .
 ```
-The best I could get with runnig this command was:
+The best I could get was:
 
 Original Dockerfile size: ***1.44GB***
 
@@ -443,6 +443,6 @@ RUN apt-get update \
 && apt-get install -y --no-install-recommends apt-utils \
 && apt-get install -y --no-install-recommends apt-transport-https \
 && conda env create --quiet -f env_out.yml && conda clean -a \
-&& apt-get clean \
-&& rm -rf /var/lib/apt/lists/*
-``
+```
+
+I also noticed that conda environment was built faster with Docker rather than on my OS :)
