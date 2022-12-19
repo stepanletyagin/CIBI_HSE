@@ -316,4 +316,7 @@ RUN wget https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLSVER}/be
 RUN pip install multiqc==1.13
 
 ```
-
+To delete after exit:
+```
+docker run --rm -it cibp_assgmnt_1
+```
