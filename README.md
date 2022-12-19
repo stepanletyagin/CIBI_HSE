@@ -253,6 +253,7 @@ docker build -t cibp_assgmnt_1 .
 ```
 where -t cibp_assgmnt_1 specifies the image name and . symbol means that the Dockerfile already in current location.
 
+I'll note right away, I understand that ubuntu does not need wget, but my terminal gave an error something like "wget: not found", and when I did add it manually, so everything worked.
 Here's what I did in Dockerfile:
 ```
 ################## BASE IMAGE ######################
