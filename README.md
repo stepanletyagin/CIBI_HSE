@@ -347,7 +347,6 @@ rm -rf /var/lib/apt/lists/*
 
 RUN touch /.bashrc
 
-#fastqc v0.11.9
 ARG FASTQCVER=0.11.9
 
 RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQCVER}.zip && \
@@ -356,7 +355,6 @@ RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FAS
     chmod a+x FastQC/fastqc && \
     echo 'alias fastqc="/FastQC/fastqc"' >> /.bashrc
 
-#STAR v.2.7.10b
 ARG STARVER=2.7.10b
 
 RUN wget https://github.com/alexdobin/STAR/releases/download/${STARVER}/STAR_${STARVER}.zip && \
@@ -366,7 +364,6 @@ RUN wget https://github.com/alexdobin/STAR/releases/download/${STARVER}/STAR_${S
     mv STAR_${STARVER}/Linux_x86_64_static/STAR /bin/STAR && \
     rm -r STAR_${STARVER}
 
-# samtools v1.16.1
 ARG SAMTOOLSVER=1.16.1
 
 RUN wget https://github.com/samtools/samtools/archive/refs/tags/${SAMTOOLSVER}.zip -O ./samtools-1.16.1.zip && \
@@ -376,14 +373,12 @@ RUN wget https://github.com/samtools/samtools/archive/refs/tags/${SAMTOOLSVER}.z
     rm -r samtools-${SAMTOOLSVER} && \
     echo 'alias samtools="/samtools/samtools.pl"' >> /.bashrc
 
-#picard v2.27.5
 ARG PICARDVER=2.27.5
 
 RUN wget https://github.com/broadinstitute/picard/releases/download/${PICARDVER}/picard.jar -O /bin/picard.jar && \
     chmod a+x /bin/picard.jar && \
     echo 'alias picard="java -jar /bin/picard.jar"' >> /.bashrc
 
-#salmon v.1.9.0
 ARG SALMONVER=1.9.0
 
 RUN wget https://github.com/COMBINE-lab/salmon/releases/download/v${SALMONVER}/salmon-${SALMONVER}_linux_x86_64.tar.gz && \
@@ -393,14 +388,11 @@ RUN wget https://github.com/COMBINE-lab/salmon/releases/download/v${SALMONVER}/s
     mv salmon-${SALMONVER}_linux_x86_64/bin/salmon /bin/salmon && \
     rm -r salmon-${SALMONVER}_linux_x86_64 
 
-# bedtools v.2.30.0
 ARG BEDTOOLSVER=2.30.0
 
 RUN wget https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLSVER}/bedtools.static.binary -O /bin/bedtools.static.binary && \
     chmod a+x /bin/bedtools.static.binary && \
     echo 'alias bedtools="/bin/bedtools.static.binary"' >> /.bashrc
-
-#multic v1.13
 
 RUN pip install multiqc==1.13
 
@@ -414,9 +406,19 @@ p.s. Almost all reported warnings were related to version specification. For ver
 
 You will be awarded extra points for the following:
 * [0.5] Using [multi-stage builds](https://docs.docker.com/build/building/multi-stage/) in Docker. E.g. to build STAR and copy only the executable to the final image.
+-----
 
 * [0.75] Minimizing the size of the final Docker image. That is, removing all intermediates, unnecessary binaries/caches, etc. Don't forget to compare & report the final size before and after all the optimizations.
 
+Original Dockerfile size: ***1.44GB***
+Minimized Dockerfile size: ***1.44GB***
+
+```
+docker build --no-cache -t cibp_assgmnt_1_min .
+```
+<img width="636" alt="Screenshot 2022-12-19 at 6 17 55 PM" src="https://user-images.githubusercontent.com/82548512/208459026-67e4174d-9ec3-43a7-8a05-406165bd4c5a.png">
+
+-----
 * [0.25] Create an extra Dockerfile that starts from [a conda base image](https://hub.docker.com/r/continuumio/anaconda3) and builds everything from your conda environment file. 
 
 Hint: `conda env create --quiet -f environment.yml && conda clean -a` ([example](https://github.com/nf-core/clipseq/blob/master/Dockerfile))
