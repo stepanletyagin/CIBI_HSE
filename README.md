@@ -238,7 +238,7 @@ prefix: /Users/stepanletyagin/opt/anaconda3/envs/CIBP_assgmnt_1
 
 ### Docker
 
-I've already installed docker a couple of years ago, but I belive I did something like [this](https://docs.docker.com/desktop/install/mac-install/).
+I've already installed docker a couple of years ago, but I did something like [this](https://docs.docker.com/desktop/install/mac-install/) for having installed it on macOS.
 
 And for the Docker file:
 
@@ -253,7 +253,7 @@ docker build -t cibp_assgmnt_1 .
 ```
 where -t cibp_assgmnt_1 specifies the image name and . symbol means that the Dockerfile already in current location.
 
-I'll note right away, I understand that ubuntu does not need wget, but my terminal gave an error something like "wget: not found", and when I did add it manually, so everything worked.
+<!-- I'll note right away, I understand that ubuntu does not need wget, but my terminal gave an error something like "wget: not found", and when I did add it manually, so everything worked. -->
 Here's what I did in Dockerfile:
 ```
 ################## BASE IMAGE ######################
@@ -265,7 +265,6 @@ LABEL maintainer=<stepanletyagin@gmail.com>
 ################## MAINTAINER ######################
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update &&\
-apt-get install -y wget &&\
 apt-get install -y apt-utils &&\
 apt-get install -y apt-transport-https &&\
 apt-get install -y openjdk-11-jre-headless &&\
@@ -321,3 +320,88 @@ To delete after exit:
 ```
 docker run --rm -it cibp_assgmnt_1
 ```
+
+Then, here's my docker file after I checked it with [linter](https://hadolint.github.io/hadolint/) and made some improvements ([source](http://label-schema.org/rc1/)for specifying metadata):
+```
+################## BASE IMAGE ######################
+FROM ubuntu:20.04
+
+################## METADATA ######################
+LABEL maintainer=<stepanletyagin@gmail.com>
+LABEL org.label-schema.schema-version="1.0"
+LABEL org.label-schema.build-date="2022-12-18T05:36:23Z"
+LABEL org.label-schema.description="CIBI HSE HW1"
+
+################## MAINTAINER ######################
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update &&\
+apt-get install -y --no-install-recommends apt-utils=2.0.2ubuntu0.2 &&\
+apt-get install -y --no-install-recommends apt-transport-https=2.0.2ubuntu0.2 &&\
+apt-get install -y --no-install-recommends openjdk-11-jre-headless=11.0.17+8-1ubuntu2~20.04 &&\
+apt-get install -y --no-install-recommends unzip=6.0-25ubuntu1.1 &&\ 
+apt-get install -y --no-install-recommends python3-pip=20.0.2-5ubuntu1.5 &&\
+apt-get clean &&\
+rm -rf /var/lib/apt/lists/*
+
+RUN touch /.bashrc
+
+#fastqc v0.11.9
+ARG FASTQCVER=0.11.9
+
+RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQCVER}.zip && \
+    unzip fastqc_v${FASTQCVER}.zip && \
+    rm fastqc_v${FASTQCVER}.zip && \
+    chmod a+x FastQC/fastqc && \
+    echo 'alias fastqc="/FastQC/fastqc"' >> /.bashrc
+
+#STAR v.2.7.10b
+ARG STARVER=2.7.10b
+
+RUN wget https://github.com/alexdobin/STAR/releases/download/${STARVER}/STAR_${STARVER}.zip && \
+    unzip STAR_${STARVER}.zip && \
+    rm STAR_${STARVER}.zip && \
+    chmod a+x STAR_${STARVER}/Linux_x86_64_static/STAR && \
+    mv STAR_${STARVER}/Linux_x86_64_static/STAR /bin/STAR && \
+    rm -r STAR_${STARVER}
+
+# samtools v1.16.1
+ARG SAMTOOLSVER=1.16.1
+
+RUN wget https://github.com/samtools/samtools/archive/refs/tags/${SAMTOOLSVER}.zip -O ./samtools-1.16.1.zip && \
+    unzip samtools-${SAMTOOLSVER}.zip && \
+    rm samtools-${SAMTOOLSVER}.zip && \
+    mv samtools-${SAMTOOLSVER}/misc samtools && \
+    rm -r samtools-${SAMTOOLSVER} && \
+    echo 'alias samtools="/samtools/samtools.pl"' >> /.bashrc
+
+#picard v2.27.5
+ARG PICARDVER=2.27.5
+
+RUN wget https://github.com/broadinstitute/picard/releases/download/${PICARDVER}/picard.jar -O /bin/picard.jar && \
+    chmod a+x /bin/picard.jar && \
+    echo 'alias picard="java -jar /bin/picard.jar"' >> /.bashrc
+
+#salmon v.1.9.0
+ARG SALMONVER=1.9.0
+
+RUN wget https://github.com/COMBINE-lab/salmon/releases/download/v${SALMONVER}/salmon-${SALMONVER}_linux_x86_64.tar.gz && \
+    tar -zxvf salmon-${SALMONVER}_linux_x86_64.tar.gz && \
+    rm salmon-${SALMONVER}_linux_x86_64.tar.gz && \
+    chmod a+x salmon-${SALMONVER}_linux_x86_64/bin/salmon && \
+    mv salmon-${SALMONVER}_linux_x86_64/bin/salmon /bin/salmon && \
+    rm -r salmon-${SALMONVER}_linux_x86_64 
+
+# bedtools v.2.30.0
+ARG BEDTOOLSVER=2.30.0
+
+RUN wget https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLSVER}/bedtools.static.binary -O /bin/bedtools.static.binary && \
+    chmod a+x /bin/bedtools.static.binary && \
+    echo 'alias bedtools="/bin/bedtools.static.binary"' >> /.bashrc
+
+#multic v1.13
+
+RUN pip install multiqc==1.13
+
+```
+
+p.s. Almost all reported warnings were related to version specification. For version control-check, I used also this [source](https://packages.ubuntu.com/ru/focal/python3-pip).
