@@ -321,7 +321,7 @@ To delete after exit:
 docker run --rm -it cibp_assgmnt_1
 ```
 
-Then, here's my docker file after I checked it with [linter](https://hadolint.github.io/hadolint/) and made some improvements ([source](http://label-schema.org/rc1/)for specifying metadata):
+Then, here's my docker file after I checked it with [linter](https://hadolint.github.io/hadolint/) and made some improvements ([source](http://label-schema.org/rc1/) for specifying metadata):
 ```
 ################## BASE IMAGE ######################
 FROM ubuntu:20.04
