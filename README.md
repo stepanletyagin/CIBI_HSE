@@ -185,7 +185,7 @@ and then I did:
 conda install -y fastqc=0.11.9
 conda install -y star=2.7.10b
 conda install -y samtools=1.16.1 
-conda install -y picard
+conda install -y picard=2.27.5
 conda install -y salmon=1.9.0
 conda install -y bedtools=2.30.0
 conda install -y multiqc=1.13
@@ -228,7 +228,7 @@ dependencies:
   - fastqc=0.11.9
   - star=2.7.10b
   - samtools=1.16.1
-  - picard
+  - picard=2.27.5
   - salmon=1.9.0
   - bedtools=2.30.0
   - multiqc=1.13
