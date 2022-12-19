@@ -425,3 +425,24 @@ Minimized Dockerfile size: ***1.06GB***
 * [0.25] Create an extra Dockerfile that starts from [a conda base image](https://hub.docker.com/r/continuumio/anaconda3) and builds everything from your conda environment file. 
 
 Hint: `conda env create --quiet -f environment.yml && conda clean -a` ([example](https://github.com/nf-core/clipseq/blob/master/Dockerfile))
+
+Dockerfile for conda:
+
+```
+################## BASE IMAGE ######################
+FROM continuumio/miniconda3
+
+################## METADATA ######################
+LABEL maintainer=<stepanletyagin@gmail.com>
+
+################## MAINTAINER ######################
+COPY env_out.yml .
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+&& apt-get install -y --no-install-recommends apt-utils \
+&& apt-get install -y --no-install-recommends apt-transport-https \
+&& conda env create --quiet -f env_out.yml && conda clean -a \
+&& apt-get clean \
+&& rm -rf /var/lib/apt/lists/*
+``
