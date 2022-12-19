@@ -410,12 +410,15 @@ You will be awarded extra points for the following:
 
 * [0.75] Minimizing the size of the final Docker image. That is, removing all intermediates, unnecessary binaries/caches, etc. Don't forget to compare & report the final size before and after all the optimizations.
 
-Original Dockerfile size: ***1.44GB***
-Minimized Dockerfile size: ***1.44GB***
-
 ```
 docker build --no-cache -t cibp_assgmnt_1_min .
 ```
+The best I could get with runnig this command was:
+
+Original Dockerfile size: ***1.44GB***
+
+Minimized Dockerfile size: ***1.06GB***
+
 <img width="636" alt="Screenshot 2022-12-19 at 6 17 55 PM" src="https://user-images.githubusercontent.com/82548512/208459026-67e4174d-9ec3-43a7-8a05-406165bd4c5a.png">
 
 -----
