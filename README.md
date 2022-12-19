@@ -321,6 +321,8 @@ To delete after exit:
 docker run --rm -it cibp_assgmnt_1
 ```
 
+-----
+
 Then, here's my docker file after I checked it with [linter](https://hadolint.github.io/hadolint/) and made some improvements ([source](http://label-schema.org/rc1/) for specifying metadata):
 ```
 ################## BASE IMAGE ######################
@@ -405,3 +407,16 @@ RUN pip install multiqc==1.13
 ```
 
 p.s. Almost all reported warnings were related to version specification. For version control-check, I used also this [source](https://packages.ubuntu.com/ru/focal/python3-pip).
+
+-----
+
+## Extra points [1.5]
+
+You will be awarded extra points for the following:
+* [0.5] Using [multi-stage builds](https://docs.docker.com/build/building/multi-stage/) in Docker. E.g. to build STAR and copy only the executable to the final image.
+
+* [0.75] Minimizing the size of the final Docker image. That is, removing all intermediates, unnecessary binaries/caches, etc. Don't forget to compare & report the final size before and after all the optimizations.
+
+* [0.25] Create an extra Dockerfile that starts from [a conda base image](https://hub.docker.com/r/continuumio/anaconda3) and builds everything from your conda environment file. 
+
+Hint: `conda env create --quiet -f environment.yml && conda clean -a` ([example](https://github.com/nf-core/clipseq/blob/master/Dockerfile))
