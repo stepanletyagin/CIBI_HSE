@@ -406,6 +406,57 @@ p.s. Almost all reported warnings were related to version specification. For ver
 
 You will be awarded extra points for the following:
 * [0.5] Using [multi-stage builds](https://docs.docker.com/build/building/multi-stage/) in Docker. E.g. to build STAR and copy only the executable to the final image.
+
+I am going to explain my thoughts with a simple example. Imagine we have Dockerfile:
+
+```
+FROM ubuntu
+RUN touch /commit1
+RUN touch /commit2
+```
+Basically, build command does next steps:
+
+It launches a container from the ubuntu/latest image.
+It runs the first command (touch /commit1) in the container, and creates a new image.
+It reuses the image created in #2 to launch a new container.
+It runs the second command (touch /commit2) in the second container, and creates a new image.
+
+if we group commands in a single RUN statement, then they will all execute in the same container, and will correspond to a single commit.
+
+So my thought for multi-stage builds is to make all RUN-s in Dockerfile in one, like this:
+```
+RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQCVER}.zip && \
+    unzip fastqc_v${FASTQCVER}.zip && \
+    rm fastqc_v${FASTQCVER}.zip && \
+    chmod a+x FastQC/fastqc && \
+    echo 'alias fastqc="/FastQC/fastqc"' >> /.bashrc && \
+    wget https://github.com/alexdobin/STAR/releases/download/${STARVER}/STAR_${STARVER}.zip && \
+    unzip STAR_${STARVER}.zip && \
+    rm STAR_${STARVER}.zip && \
+    chmod a+x STAR_${STARVER}/Linux_x86_64_static/STAR && \
+    mv STAR_${STARVER}/Linux_x86_64_static/STAR /bin/STAR && \
+    rm -r STAR_${STARVER} &&\
+    wget https://github.com/samtools/samtools/archive/refs/tags/${SAMTOOLSVER}.zip -O ./samtools-1.16.1.zip && \
+    unzip samtools-${SAMTOOLSVER}.zip && \
+    rm samtools-${SAMTOOLSVER}.zip && \
+    mv samtools-${SAMTOOLSVER}/misc samtools && \
+    rm -r samtools-${SAMTOOLSVER} && \
+    echo 'alias samtools="/samtools/samtools.pl"' >> /.bashrc &&\
+    wget https://github.com/broadinstitute/picard/releases/download/${PICARDVER}/picard.jar -O /bin/picard.jar && \
+    chmod a+x /bin/picard.jar && \
+    echo 'alias picard="java -jar /bin/picard.jar"' >> /.bashrc &&\
+    wget https://github.com/COMBINE-lab/salmon/releases/download/v${SALMONVER}/salmon-${SALMONVER}_linux_x86_64.tar.gz && \
+    tar -zxvf salmon-${SALMONVER}_linux_x86_64.tar.gz && \
+    rm salmon-${SALMONVER}_linux_x86_64.tar.gz && \
+    chmod a+x salmon-${SALMONVER}_linux_x86_64/bin/salmon && \
+    mv salmon-${SALMONVER}_linux_x86_64/bin/salmon /bin/salmon && \
+    rm -r salmon-${SALMONVER}_linux_x86_64 &&\
+    wget https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLSVER}/bedtools.static.binary -O /bin/bedtools.static.binary && \
+    chmod a+x /bin/bedtools.static.binary && \
+    echo 'alias bedtools="/bin/bedtools.static.binary"' >> /.bashrc &&\
+    pip install multiqc==1.13
+```
+
 -----
 
 * [0.75] Minimizing the size of the final Docker image. That is, removing all intermediates, unnecessary binaries/caches, etc. Don't forget to compare & report the final size before and after all the optimizations.
@@ -418,6 +469,8 @@ The best I could get was:
 Original Dockerfile size: ***1.44GB***
 
 Minimized Dockerfile size: ***1.06GB***
+
+Changing base image for, like, alpine would reduce Docker image size, but that would've took more time for me to change whole Dockerfile.  
 
 <img width="636" alt="Screenshot 2022-12-19 at 6 17 55 PM" src="https://user-images.githubusercontent.com/82548512/208459026-67e4174d-9ec3-43a7-8a05-406165bd4c5a.png">
 
