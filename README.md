@@ -240,7 +240,7 @@ prefix: /Users/stepanletyagin/opt/anaconda3/envs/CIBP_assgmnt_1
 
 I've already installed docker a couple of years ago, but I did something like [this](https://docs.docker.com/desktop/install/mac-install/) for having installed it on macOS.
 
-And for the Docker file:
+And for the Dockerfile:
 
 ```
 touch Dockerfile 
