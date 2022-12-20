@@ -520,13 +520,13 @@ docker build --no-cache -t docker_extra .
 ```
 The best I could get was:
 
-Original Dockerfile size: ***1.44GB***
+Original Dockerfile size: ***1.06GB***
 
 Minimized Dockerfile size: ***526MB***
 
 Changing base image for, like, alpine would reduce Docker image size I guess, but that would've took more time for me to change whole Dockerfile.  
 
-<img width="558" alt="Screenshot 2022-12-20 at 4 23 11 AM" src="https://user-images.githubusercontent.com/82548512/208559370-1771477d-3a4f-403c-8931-1763a9aacb90.png">
+<img width="597" alt="Screenshot 2022-12-20 at 11 39 13 PM" src="https://user-images.githubusercontent.com/82548512/208762128-7a8cd119-0c09-4c56-966a-076da3603575.png">
 
 -----
 * [0.25] Create an extra Dockerfile that starts from [a conda base image](https://hub.docker.com/r/continuumio/anaconda3) and builds everything from your conda environment file. 
