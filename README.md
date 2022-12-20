@@ -509,7 +509,7 @@ FROM builder AS multiqc
 
 RUN pip install multiqc==1.13
 ```
-That will also result in reduction of image size for the next task. (See memory for that Dockerfile below in the next task)
+That will also result in reduction of image size for the next task. (See SIZE for that Dockerfile below in the next task)
 
 -----
 
