@@ -426,12 +426,10 @@ It runs the first command (touch /commit1) in the container, and creates a new i
 It reuses the image created in #2 to launch a new container.
 It runs the second command (touch /commit2) in the second container, and creates a new image.
 
-if we group commands in a single RUN statement, then they will all execute in the same container, and will correspond to a single commit.
-
-So my thought for multi-stage builds is to make less RUN-s as possible in Dockerfile in one, like this:
+So my thought for multi-stage builds is making something like this:
 ```
 ################## BASE IMAGE ######################
-FROM ubuntu:20.04
+FROM ubuntu AS builder
 
 ################## METADATA ######################
 LABEL maintainer=<stepanletyagin@gmail.com>
@@ -441,7 +439,15 @@ LABEL org.label-schema.description="CIBI HSE HW1"
 
 ################## MAINTAINER ######################
 ARG DEBIAN_FRONTEND=noninteractive
+ARG FASTQCVER=0.11.9
+ARG STARVER=2.7.10b
+ARG SAMTOOLSVER=1.16.1
+ARG PICARDVER=2.27.5
+ARG SALMONVER=1.9.0
+ARG BEDTOOLSVER=2.30.0
+
 RUN apt-get update \
+&& apt-get install -y --no-install-recommends wget \
 && apt-get install -y --no-install-recommends apt-utils \
 && apt-get install -y --no-install-recommends apt-transport-https \
 && apt-get install -y --no-install-recommends openjdk-11-jre-headless \
@@ -452,45 +458,58 @@ RUN apt-get update \
 
 RUN touch /.bashrc
 
-ARG FASTQCVER=0.11.9
-ARG STARVER=2.7.10b
-ARG SAMTOOLSVER=1.16.1
-ARG PICARDVER=2.27.5
-ARG SALMONVER=1.9.0
-ARG BEDTOOLSVER=2.30.0
+FROM builder AS fastqc
 
 RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQCVER}.zip && \
     unzip fastqc_v${FASTQCVER}.zip && \
     rm fastqc_v${FASTQCVER}.zip && \
     chmod a+x FastQC/fastqc && \
-    echo 'alias fastqc="/FastQC/fastqc"' >> /.bashrc && \
-    wget https://github.com/alexdobin/STAR/releases/download/${STARVER}/STAR_${STARVER}.zip && \
+    echo 'alias fastqc="/FastQC/fastqc"' >> /.bashrc
+
+FROM builder AS STAR
+
+RUN wget https://github.com/alexdobin/STAR/releases/download/${STARVER}/STAR_${STARVER}.zip && \
     unzip STAR_${STARVER}.zip && \
     rm STAR_${STARVER}.zip && \
     chmod a+x STAR_${STARVER}/Linux_x86_64_static/STAR && \
     mv STAR_${STARVER}/Linux_x86_64_static/STAR /bin/STAR && \
-    rm -r STAR_${STARVER} &&\
-    wget https://github.com/samtools/samtools/archive/refs/tags/${SAMTOOLSVER}.zip -O ./samtools-1.16.1.zip && \
+    rm -r STAR_${STARVER}
+
+FROM builder AS samtools
+
+RUN wget https://github.com/samtools/samtools/archive/refs/tags/${SAMTOOLSVER}.zip -O ./samtools-1.16.1.zip && \
     unzip samtools-${SAMTOOLSVER}.zip && \
     rm samtools-${SAMTOOLSVER}.zip && \
     mv samtools-${SAMTOOLSVER}/misc samtools && \
     rm -r samtools-${SAMTOOLSVER} && \
-    echo 'alias samtools="/samtools/samtools.pl"' >> /.bashrc &&\
-    wget https://github.com/broadinstitute/picard/releases/download/${PICARDVER}/picard.jar -O /bin/picard.jar && \
+    echo 'alias samtools="/samtools/samtools.pl"' >> /.bashrc
+
+FROM builder AS picard
+
+RUN wget https://github.com/broadinstitute/picard/releases/download/${PICARDVER}/picard.jar -O /bin/picard.jar && \
     chmod a+x /bin/picard.jar && \
-    echo 'alias picard="java -jar /bin/picard.jar"' >> /.bashrc &&\
-    wget https://github.com/COMBINE-lab/salmon/releases/download/v${SALMONVER}/salmon-${SALMONVER}_linux_x86_64.tar.gz && \
+    echo 'alias picard="java -jar /bin/picard.jar"' >> /.bashrc
+
+FROM builder AS salmon
+
+RUN wget https://github.com/COMBINE-lab/salmon/releases/download/v${SALMONVER}/salmon-${SALMONVER}_linux_x86_64.tar.gz && \
     tar -zxvf salmon-${SALMONVER}_linux_x86_64.tar.gz && \
     rm salmon-${SALMONVER}_linux_x86_64.tar.gz && \
     chmod a+x salmon-${SALMONVER}_linux_x86_64/bin/salmon && \
     mv salmon-${SALMONVER}_linux_x86_64/bin/salmon /bin/salmon && \
-    rm -r salmon-${SALMONVER}_linux_x86_64 &&\
-    wget https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLSVER}/bedtools.static.binary -O /bin/bedtools.static.binary && \
+    rm -r salmon-${SALMONVER}_linux_x86_64
+
+FROM builder AS bedtools
+
+RUN wget https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLSVER}/bedtools.static.binary -O /bin/bedtools.static.binary && \
     chmod a+x /bin/bedtools.static.binary && \
-    echo 'alias bedtools="/bin/bedtools.static.binary"' >> /.bashrc &&\
-    pip install multiqc==1.13
+    echo 'alias bedtools="/bin/bedtools.static.binary"' >> /.bashrc
+
+FROM builder AS multiqc
+
+RUN pip install multiqc==1.13
 ```
-That will also result in reduction of image size for the next task. 
+That will also result in reduction of image size for the next task. (See memory for that Dockerfile below in the next task)
 
 -----
 
@@ -503,11 +522,12 @@ The best I could get was:
 
 Original Dockerfile size: ***1.44GB***
 
-Minimized Dockerfile size: ***1.06GB***
+Minimized Dockerfile size: ***526MB***
 
 Changing base image for, like, alpine would reduce Docker image size, but that would've took more time for me to change whole Dockerfile.  
 
-<img width="636" alt="Screenshot 2022-12-19 at 6 17 55 PM" src="https://user-images.githubusercontent.com/82548512/208459026-67e4174d-9ec3-43a7-8a05-406165bd4c5a.png">
+<img width="558" alt="Screenshot 2022-12-20 at 4 23 11 AM" src="https://user-images.githubusercontent.com/82548512/208559370-1771477d-3a4f-403c-8931-1763a9aacb90.png">
+
 
 -----
 * [0.25] Create an extra Dockerfile that starts from [a conda base image](https://hub.docker.com/r/continuumio/anaconda3) and builds everything from your conda environment file. 
