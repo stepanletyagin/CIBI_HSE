@@ -516,7 +516,7 @@ That will also result in reduction of image size for the next task. (See memory 
 * [0.75] Minimizing the size of the final Docker image. That is, removing all intermediates, unnecessary binaries/caches, etc. Don't forget to compare & report the final size before and after all the optimizations.
 
 ```
-docker build --no-cache -t cibp_assgmnt_1_min .
+docker build --no-cache -t docker_extra .
 ```
 The best I could get was:
 
@@ -524,10 +524,9 @@ Original Dockerfile size: ***1.44GB***
 
 Minimized Dockerfile size: ***526MB***
 
-Changing base image for, like, alpine would reduce Docker image size, but that would've took more time for me to change whole Dockerfile.  
+Changing base image for, like, alpine would reduce Docker image size I guess, but that would've took more time for me to change whole Dockerfile.  
 
 <img width="558" alt="Screenshot 2022-12-20 at 4 23 11 AM" src="https://user-images.githubusercontent.com/82548512/208559370-1771477d-3a4f-403c-8931-1763a9aacb90.png">
-
 
 -----
 * [0.25] Create an extra Dockerfile that starts from [a conda base image](https://hub.docker.com/r/continuumio/anaconda3) and builds everything from your conda environment file. 
