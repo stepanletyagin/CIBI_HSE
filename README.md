@@ -316,9 +316,14 @@ RUN wget https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLSVER}/be
 RUN pip install multiqc==1.13
 
 ```
-To delete after exit:
+To start the container:
 ```
 docker run --rm -it cibp_assgmnt_1
+```
+
+To remove image after exit:
+```
+docker rmi -f <Image_name>
 ```
 
 -----
@@ -423,8 +428,37 @@ It runs the second command (touch /commit2) in the second container, and creates
 
 if we group commands in a single RUN statement, then they will all execute in the same container, and will correspond to a single commit.
 
-So my thought for multi-stage builds is to make all RUN-s in Dockerfile in one, like this:
+So my thought for multi-stage builds is to make less RUN-s as possible in Dockerfile in one, like this:
 ```
+################## BASE IMAGE ######################
+FROM ubuntu:20.04
+
+################## METADATA ######################
+LABEL maintainer=<stepanletyagin@gmail.com>
+LABEL org.label-schema.schema-version="1.0"
+LABEL org.label-schema.build-date="2022-12-18T05:36:23Z"
+LABEL org.label-schema.description="CIBI HSE HW1"
+
+################## MAINTAINER ######################
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+&& apt-get install -y --no-install-recommends apt-utils \
+&& apt-get install -y --no-install-recommends apt-transport-https \
+&& apt-get install -y --no-install-recommends openjdk-11-jre-headless \
+&& apt-get install -y --no-install-recommends unzip \ 
+&& apt-get install -y --no-install-recommends python3-pip \
+&& apt-get clean \
+&& rm -rf /var/lib/apt/lists/*
+
+RUN touch /.bashrc
+
+ARG FASTQCVER=0.11.9
+ARG STARVER=2.7.10b
+ARG SAMTOOLSVER=1.16.1
+ARG PICARDVER=2.27.5
+ARG SALMONVER=1.9.0
+ARG BEDTOOLSVER=2.30.0
+
 RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FASTQCVER}.zip && \
     unzip fastqc_v${FASTQCVER}.zip && \
     rm fastqc_v${FASTQCVER}.zip && \
@@ -456,6 +490,7 @@ RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FAS
     echo 'alias bedtools="/bin/bedtools.static.binary"' >> /.bashrc &&\
     pip install multiqc==1.13
 ```
+That will also result in reduction of image size for the next task. 
 
 -----
 
@@ -497,5 +532,3 @@ RUN apt-get update \
 && apt-get install -y --no-install-recommends apt-transport-https \
 && conda env create --quiet -f env_out.yml && conda clean -a \
 ```
-
-I also noticed that conda environment was built faster with Docker rather than on my OS :)
