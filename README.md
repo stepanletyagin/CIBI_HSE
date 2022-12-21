@@ -19,9 +19,15 @@ SSH or Secure Shell is a network communication protocol that enables two compute
 
 HTTPS and SSH they are all have the same functionality, which is Encryption. 
 
-Port 21 is used to establish the connection between the 2 computers (or hosts) and port 20 to transfer data (via the Data channel).
+Port 21 is used to establish the connection between the 2 computers (or hosts) and port 20 to transfer data (via the Data channel) -  File Transfer Protocol (FTP).
 
+Port 25: Simple Mail Transfer Protocol (SMTP). 
 
+Port 53: Domain Name System (DNS).
+
+Port 80: Hypertext Transfer Protocol (HTTP).
+
+For other, check [this](https://docs.oracle.com/en/storage/tape-storage/sl4000/slklg/default-port-numbers.html#GUID-8B442CCE-F94D-4DFB-9F44-996DE72B2558) out.
 
 -----
 * [0.4] Explain briefly: (1) what is IP, (2) what IPs are called 'white'/public, (3) and what happens when you enter 'google.com' into the web browser. 
