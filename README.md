@@ -143,6 +143,33 @@ tabix -p gff file.gff.gz
 
 * [1] Select and download BED files for three ChIP-seq and one ATAC-seq experiment from the ENCODE (use one tissue/cell line). Sort, bgzip, and index them using tabix.
 
+Cell-line: GM12878 (ATAC-seq)
+
+link: https://www.encodeproject.org/experiments/ENCSR637XSC/
+
+RAD21 ChIP-seq on human GM12878.
+
+link: https://www.encodeproject.org/experiments/ENCSR000EAC/
+
+MAX ChIP-seq on human GM12878.
+
+link: https://www.encodeproject.org/experiments/ENCSR000DZF/
+
+POLR2AphosphoS5 ChIP-seq on human GM12878
+
+link: https://www.encodeproject.org/experiments/ENCSR000BIF/
+
+```
+wget https://www.encodeproject.org/files/ENCFF620WFJ/@@download/ENCFF620WFJ.bed.gz -O atac.bed.gz
+gunzip atac.bed.gz
+wget https://www.encodeproject.org/files/ENCFF712UBB/@@download/ENCFF712UBB.bed.gz -O chip_1.bed.gz
+gunzip chip_1.bed.gz
+wget https://www.encodeproject.org/files/ENCFF432GNS/@@download/ENCFF432GNS.bed.gz -O chip_2.bed.gz
+gunzip chip_2.bed.gz
+wget https://www.encodeproject.org/files/ENCFF740DDH/@@download/ENCFF740DDH.bed.gz -O chip_3.bed.gz
+gunzip chip_3.bed.gz
+```
+
 
 
 **JBrowse 2**
