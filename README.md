@@ -464,7 +464,7 @@ RUN wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v${FAS
     unzip fastqc_v${FASTQCVER}.zip && \
     rm fastqc_v${FASTQCVER}.zip && \
     chmod a+x FastQC/fastqc && \
-    echo 'alias fastqc="/FastQC/fastqc"' >> /.bashrc
+    echo 'alias fastqc="/FastQC/fastqc"' >> /usr/local/bin/fastqc
 
 FROM builder AS STAR
 
@@ -472,7 +472,7 @@ RUN wget https://github.com/alexdobin/STAR/releases/download/${STARVER}/STAR_${S
     unzip STAR_${STARVER}.zip && \
     rm STAR_${STARVER}.zip && \
     chmod a+x STAR_${STARVER}/Linux_x86_64_static/STAR && \
-    mv STAR_${STARVER}/Linux_x86_64_static/STAR /bin/STAR && \
+    mv STAR_${STARVER}/Linux_x86_64_static/STAR /usr/local/bin/STAR && \
     rm -r STAR_${STARVER}
 
 FROM builder AS samtools
@@ -482,13 +482,13 @@ RUN wget https://github.com/samtools/samtools/archive/refs/tags/${SAMTOOLSVER}.z
     rm samtools-${SAMTOOLSVER}.zip && \
     mv samtools-${SAMTOOLSVER}/misc samtools && \
     rm -r samtools-${SAMTOOLSVER} && \
-    echo 'alias samtools="/samtools/samtools.pl"' >> /.bashrc
+    echo 'alias samtools="/samtools/samtools.pl"' >> /usr/local/bin/samtools
 
 FROM builder AS picard
 
 RUN wget https://github.com/broadinstitute/picard/releases/download/${PICARDVER}/picard.jar -O /bin/picard.jar && \
     chmod a+x /bin/picard.jar && \
-    echo 'alias picard="java -jar /bin/picard.jar"' >> /.bashrc
+    echo 'alias picard="java -jar /bin/picard.jar"' >> /usr/local/bin/picard
 
 FROM builder AS salmon
 
@@ -496,18 +496,34 @@ RUN wget https://github.com/COMBINE-lab/salmon/releases/download/v${SALMONVER}/s
     tar -zxvf salmon-${SALMONVER}_linux_x86_64.tar.gz && \
     rm salmon-${SALMONVER}_linux_x86_64.tar.gz && \
     chmod a+x salmon-${SALMONVER}_linux_x86_64/bin/salmon && \
-    mv salmon-${SALMONVER}_linux_x86_64/bin/salmon /bin/salmon && \
+    mv salmon-${SALMONVER}_linux_x86_64/bin/salmon /usr/local/bin/salmon && \
     rm -r salmon-${SALMONVER}_linux_x86_64
 
 FROM builder AS bedtools
 
 RUN wget https://github.com/arq5x/bedtools2/releases/download/v${BEDTOOLSVER}/bedtools.static.binary -O /bin/bedtools.static.binary && \
     chmod a+x /bin/bedtools.static.binary && \
-    echo 'alias bedtools="/bin/bedtools.static.binary"' >> /.bashrc
+    echo 'alias bedtools="/bin/bedtools.static.binary"' >> /usr/local/bin/bedtools
 
 FROM builder AS multiqc
 
 RUN pip install multiqc==1.13
+
+################################################################################
+FROM builder
+
+COPY --from=fastqc /usr/local/bin/fastqc /bin/fastqc
+COPY --from=STAR /usr/local/bin/STAR /bin/STAR
+COPY --from=samtools /usr/local/bin/samtools /bin/samtools
+COPY --from=picard /usr/local/bin/picard /bin/picard
+COPY --from=salmon /usr/local/bin/salmon /bin/salmon
+COPY --from=bedtools /usr/local/bin/bedtools /bin/bedtools
+#COPY --from=multiqc /usr/local/bin/multiqc /bin/multiqc
+
+ENV PATH="/bin:${PATH}"
+
+CMD /bin/bash
+
 ```
 That will also result in reduction of image size for the next task. (See SIZE for that Dockerfile below in the next task)
 
@@ -522,11 +538,12 @@ The best I could get was:
 
 Original Dockerfile size: ***1.06GB***
 
-Minimized Dockerfile size: ***526MB***
+Minimized Dockerfile size: ***784MB***
 
 Changing base image for, like, alpine would reduce Docker image size I guess, but that would've took more time for me to change whole Dockerfile.  
 
-<img width="597" alt="Screenshot 2022-12-20 at 11 39 13 PM" src="https://user-images.githubusercontent.com/82548512/208762128-7a8cd119-0c09-4c56-966a-076da3603575.png">
+<img width="548" alt="Screenshot 2022-12-21 at 12 09 02 PM" src="https://user-images.githubusercontent.com/82548512/208866010-61d32a65-1742-41e1-b558-95dbbeb1bf63.png">
+
 
 -----
 * [0.25] Create an extra Dockerfile that starts from [a conda base image](https://hub.docker.com/r/continuumio/anaconda3) and builds everything from your conda environment file. 
