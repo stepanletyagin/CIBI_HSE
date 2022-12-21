@@ -25,7 +25,24 @@ Port 21 is used to establish the connection between the 2 computers (or hosts) a
 
 -----
 * [0.4] Explain briefly: (1) what is IP, (2) what IPs are called 'white'/public, (3) and what happens when you enter 'google.com' into the web browser. 
+
+1. IP stands for "Internet Protocol," which is the set of rules governing the format of data sent via the internet or local network. In essence, IP addresses are the identifier that allows information to be sent between devices on a network: they contain location information and make devices accessible for communication. There are four types of IP addresses: public, private, static, and dynamic.
+2. A public IP address is an IP address that can be accessed directly over the internet and is assigned to your network router by your internet service provider (ISP). Your personal device also has a private IP that remains hidden when you connect to the internet through your router's public IP.
+3. After you’ve typed the URL into your browser and pressed enter, the browser needs to figure out which server on the Internet to connect to. To do that, it needs to look up the IP address of the server hosting the website using the domain you typed in. It does this using a DNS lookup. Once the browser gets the DNS record with the IP address. Browser initiates Transmission Control Protocol (TCP) with the server. Browser sends the HTTP request to the server. Server processes request and sends back a response. Browser renders the content.
+
+p.s An IP address is a string of numbers separated by periods. IP addresses are expressed as a set of four numbers — an example address might be 192.158.1.38. Each number in the set can range from 0 to 255. So, the full IP addressing range goes from 0.0.0.0 to 255.255.255.255.
+
+-----
 * [0.4] What is Nginx? How does it work on the high level? List several alternative web servers.
+
+[NGINX](https://www.nginx.com/resources/glossary/nginx/) is open source software for web serving, reverse proxying, caching, load balancing, media streaming, and more. It started out as a web server designed for maximum performance and stability. In addition to its HTTP server capabilities, NGINX can also function as a proxy server for email (IMAP, POP3, and SMTP) and a reverse proxy and load balancer for HTTP, TCP, and UDP servers.
+
+NGINX performs with an asynchronous, event-driven architecture. It means that similar threads are managed under one worker process, and each worker process contains smaller units called worker connections. This whole unit is then responsible for handling concurrent requests. Worker connections deliver the requests to a worker process, which will also send it to the master process. Finally, the master process provides the result of those requests.
+
+Nginx alternatives: **Apache**, is a web server notable for playing a key role in the initial growth of the World Wide Web. **Lighttpd** (pronounced "lighty") is a web server designed to be secure, fast, standards-compliant, and flexible while being optimized for speed-critical environments. **Caddy** is a web server like Apache, nginx, or lighttpd.
+
+
+-----
 * [0.4] What is SSH, and for what is it typically used? Explain two ways to authenticate in an SSH server in detail.
 
 SSH is a protocol for computer-remote server interaction. SSH protocols specify standards for operating network services securely between untrusted hosts over unsecured networks. Communications between a client and server using SSH are encrypted, so it is ideal for use on unsecure networks. Originally, the word shell in SSH referred to a program that processed Unix commands. SSH is often used in conjunction with various other internet protocols.
