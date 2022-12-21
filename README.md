@@ -103,7 +103,6 @@ ssh -i /Users/stepanletyagin/Desktop/key.txt saletyagin@51.250.64.138
 ```
 
 * [1] Download the latest human genome assembly (GRCh38) from the Ensemble FTP server ([fasta](https://ftp.ensembl.org/pub/release-108/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz), [GFF3](https://ftp.ensembl.org/pub/release-108/gff3/homo_sapiens/Homo_sapiens.GRCh38.108.gff3.gz)). Index the fasta using samtools (`samtools faidx`) and GFF3 using tabix. 
-* [1] Select and download BED files for three ChIP-seq and one ATAC-seq experiment from the ENCODE (use one tissue/cell line). Sort, bgzip, and index them using tabix.
 
 Since we have Ubuntu:
 ```
@@ -141,6 +140,10 @@ tar xvf v1.0.0.tar
 /home/saletyagin/gff3sort-1.0.0/gff3sort.pl --precise --chr_order natural Homo_sapiens.GRCh38.108.gff3 | bgzip > gff3.gff.gz
 tabix -p gff file.gff.gz
 ```
+
+* [1] Select and download BED files for three ChIP-seq and one ATAC-seq experiment from the ENCODE (use one tissue/cell line). Sort, bgzip, and index them using tabix.
+
+
 
 **JBrowse 2**
 * [1] Download and install [JBrowse 2](https://jbrowse.org/jb2/). Create a new jbrowse [repository](https://jbrowse.org/jb2/docs/cli/#jbrowse-create-localpath) in `/mnt/JBrowse/` (or some other folder).
