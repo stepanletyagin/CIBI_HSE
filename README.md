@@ -76,8 +76,71 @@ Imagine wrapping up a large bioinformatics project and wanting to share raw data
 
 **Remote Server**:
 * [2] Create a new virtual machine in the Yandex/Mail/etc cloud (order at least 10GB of free disk space). Generate SSH key pair and use it to connect to your server.
+
+VM settings: 
+1. Ubuntu 22.04
+2. vSPU: 2
+3. Доля vSPU: 20%
+4. RAM: 4 GB
+5. Disk size: 30GB
+
+<img width="1423" alt="Screenshot 2022-12-22 at 12 19 01 AM" src="https://user-images.githubusercontent.com/82548512/209004564-e7762d1e-5e29-4927-b8bc-069179d628a3.png">
+
+
+Now for the SSH:
+```
+ssh-keygen -t ed25519
+```
+
+Here's my SSH-key, made with keygen:
+```
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBr/VVkZTKCc92uN182gBXfhhg0B90ykxGtk5WJq15MG
+```
+
+Achieves connection to the server with:
+```
+ssh -i /Users/stepanletyagin/Desktop/key.txt saletyagin@51.250.64.138
+```
+
 * [1] Download the latest human genome assembly (GRCh38) from the Ensemble FTP server ([fasta](https://ftp.ensembl.org/pub/release-108/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz), [GFF3](https://ftp.ensembl.org/pub/release-108/gff3/homo_sapiens/Homo_sapiens.GRCh38.108.gff3.gz)). Index the fasta using samtools (`samtools faidx`) and GFF3 using tabix. 
 * [1] Select and download BED files for three ChIP-seq and one ATAC-seq experiment from the ENCODE (use one tissue/cell line). Sort, bgzip, and index them using tabix.
+
+Since we have Ubuntu:
+```
+sudo apt-get install -y samtools
+sudo apt-get install -y tabix
+```
+And for getting required human genome data:
+
+```
+wget https://ftp.ensembl.org/pub/release-108/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+gunzip Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+samtools faidx Homo_sapiens.GRCh38.dna.primary_assembly.fa # indexing with samtools
+
+wget https://ftp.ensembl.org/pub/release-108/gff3/homo_sapiens/Homo_sapiens.GRCh38.108.gff3.gz
+gunzip Homo_sapiens.GRCh38.108.gff3.gz
+```
+Then, while using tabix for GFF3, I got:
+```
+tabix -p gff Homo_sapiens.GRCh38.108.gff3
+# the compression of 'Homo_sapiens.GRCh38.108.gff3' is not BGZF
+```
+So I used:
+```
+bgzip Homo_sapiens.GRCh38.108.gff3 # to zip back
+```
+but then I got:
+```
+#Unsorted positions on sequence #1: 13221 followed by 12010 tbx_index_build failed: Homo_sapiens.GRCh38.108.gff3.gz
+```
+I found that [source](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-017-1930-3) and downloaded [tool](https://github.com/billzt/gff3sort) and used command again:
+```
+wget https://github.com/billzt/gff3sort/archive/refs/tags/v1.0.0.tar.gz
+gunzip v1.0.0.tar.gz
+tar xvf v1.0.0.tar
+/home/saletyagin/gff3sort-1.0.0/gff3sort.pl --precise --chr_order natural Homo_sapiens.GRCh38.108.gff3 | bgzip > gff3.gff.gz
+tabix -p gff file.gff.gz
+```
 
 **JBrowse 2**
 * [1] Download and install [JBrowse 2](https://jbrowse.org/jb2/). Create a new jbrowse [repository](https://jbrowse.org/jb2/docs/cli/#jbrowse-create-localpath) in `/mnt/JBrowse/` (or some other folder).
