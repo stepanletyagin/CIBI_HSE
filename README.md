@@ -170,7 +170,34 @@ wget https://www.encodeproject.org/files/ENCFF740DDH/@@download/ENCFF740DDH.bed.
 gunzip chip_3.bed.gz
 ```
 
+Sort, bgzip, and index:
+```
+sudo apt install bedtools
 
+#sort
+bedtools sort -i chip_1.bed.gz > sort_chip_1.bed
+bedtools sort -i chip_2.bed.gz > sort_chip_2.bed
+bedtools sort -i chip_3.bed.gz > sort_chip_3.bed
+bedtools sort -i atac.bed.gz > sort_atac.bed
+
+# tabix BEDs
+bgzip sort_chip_1.bed
+tabix sort_chip_1.bed.gz
+bgzip sort_chip_2.bed
+tabix sort_chip_2.bed.gz
+bgzip sort_chip_3.bed
+tabix sort_chip_3.bed.gz
+bgzip sort_atac.bed
+tabix sort_atac.bed.gz
+
+# or simply like this:
+# for el in sort_atac sort_chip_1 sort_chip_2 sort_chip_3
+# do
+#     bgzip el.bed
+#     tabix el.bed.gz
+# done
+    
+```
 
 **JBrowse 2**
 * [1] Download and install [JBrowse 2](https://jbrowse.org/jb2/). Create a new jbrowse [repository](https://jbrowse.org/jb2/docs/cli/#jbrowse-create-localpath) in `/mnt/JBrowse/` (or some other folder).
