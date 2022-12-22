@@ -275,6 +275,12 @@ Works just fine.
 
 * [1] Add your files (BED & FASTA & GFF3) to the genome browser and verify that everything works as intended. Don't forget to [index](https://jbrowse.org/jb2/docs/cli/#jbrowse-text-index) the genome annotation, so you could later search by gene names.
 
+<!-- for i in *.sorted.bed; do awk '{gsub(/^chr/,""); print}' $i > $(echo $i| cut -d '.' -f 1)'_renamed.bed'; done
+
+awk '{gsub(/^chr/,""); print}' $sort_chip_1.bed > $(echo $sort_chip_1.bed| cut -d '.' -f 1)'_renamed.bed'
+
+sudo jbrowse text-index --file=Homo_sapiens.GRCh38.108.gff3.gz -->
+
 Adding genome assembly 
 ```
 sudo /home/saletyagin/mnt/jbrowse add-assembly /home/saletyagin/Homo_sapiens.GRCh38.dna.primary_assembly.fa --load copy --out /mnt/jbrowse/
