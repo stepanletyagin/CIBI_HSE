@@ -311,3 +311,20 @@ beacuse BED and GFF chromosomes names differ in files we have to rename them.
 Hint: to specify the config, use the config=PATH query parameter. E.g. `http://64.129.58.13/jbrowse/?config=my_folder%2Fconfig.json` where `my_folder%2Fconfig.json` is the [escaped](https://en.wikipedia.org/wiki/Percent-encoding) path to the config file.
 
 * [0.5] Give an in-depth explanation of the OSI model and how the TCP/IP stack works. Don't copy-paste descriptions from the internet; paraphrase and shorten as much as possible (imagine writing a cheat sheet for yourself).
+
+OSI (Open System Interconnection) is the model that characterizes the interaction between network equipment. In other words, with the help of OSI, PCs "communicate" with network cards, switches or routers. The process of data transmission over the network with OSI is organised from one level to another. Each of the layers uses information from the previous level and certain protocols:
+
+1. Physical leayer. Information or bits are transmitted either by wires, cables, or via Bluetooth or Wi-Fi.
+2. Channel layer. The layer takes bits and transforms them into frames (frames) to determine where to send the information.
+3. Network layer. Traffic routing (determining the correspondence between the logical address of the network layer (IP) and the physical address of the device (MAC)).
+4. Transport layer. Receiving packets and transmitting them over the network. Connection setup, reliability, and flow control.
+5. Session layer. It coordinates communication between applications and it's responsible for establishing, maintaining and terminating communication and exchanging information itself.
+6. View layer. Prepares information and converts (compresses, encodes, encrypts) it into an in interpreted language for the user or machine.
+7. The application layer. With the help of its protocols, it displays data in a format understandable to the user.
+
+The TCP/IP protocol stack (Transmission Control Protocol/Internet Protocol, Transmission Control Protocol/Internet Protocol) is a network model describing the process of digital data transmission. 
+
+The basic principle of TCP/IP operation is a layer-by-layer grouping of solutions to communication problems, at that data packets are passed through all levels first in direct order before being sent to the target device, and then in reverse order to convert the message to the original format. This method of data transmission allows you to standardize the process and does not require hardware and software management.
+
+The TCP/IP Stack works just like the OSI model by establishing a set of rules and standards for communication in and between the different layers. These rules ensure that different products can communicate with each other because they are developed around the same guidelines.
+
