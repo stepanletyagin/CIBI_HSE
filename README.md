@@ -288,7 +288,7 @@ sudo jbrowse add-track sort_chip_1.bed.gz --load copy --out /mnt/JBrowse/
 sudo jbrowse add-track sort_chip_2.bed.gz --load copy --out /mnt/JBrowse/
 sudo jbrowse add-track sort_chip_3.bed.gz --load copy --out /mnt/JBrowse/
 ```
-***link***: http://51.250.64.138/jbrowse/?session=local-gSyZldSiJ
+***link***: http://51.250.64.138/jbrowse/?session=local-b9C0f-ejq
 
 p.s. We probably should also do that also before, but I am still not sure of that:
 
