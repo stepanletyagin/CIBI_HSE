@@ -303,7 +303,7 @@ sudo jbrowse add-track sort_chip_1_renamed.bed.gz --load copy --out /mnt/JBrowse
 sudo jbrowse add-track sort_chip_2_renamed.bed.gz --load copy --out /mnt/JBrowse/
 sudo jbrowse add-track sort_chip_3_renamed.bed.gz --load copy --out /mnt/JBrowse/
 ```
-***link***: http://51.250.64.138/jbrowse/?session=local-8P7g5-BvC
+***link***: http://51.250.64.138/jbrowse/?session=share-_knIlEIZwC&password=Ccp2z
 
 **Remember to put a [persistent link](https://jbrowse.org/jb2/docs/user_guides/basic_usage/#sharing-sessions) to a JBrowse 2 session with all your BED files and the genome annotation in the report (like [this](https://jbrowse.org/code/jb2/v2.3.1/?session=share-HShsEcnq3i&password=nYzTU)). I must be able to access it without problems.**
 
