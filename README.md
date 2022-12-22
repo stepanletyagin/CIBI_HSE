@@ -271,8 +271,6 @@ sudo nginx -s reload
 http://51.250.64.138/jbrowse/
 ```
 
-<img width="1440" alt="Screenshot 2022-12-22 at 3 12 06 AM" src="https://user-images.githubusercontent.com/82548512/209027339-e806bdaa-a81f-4cff-a263-43b142d8d4e6.png">
-
 Works just fine.
 
 * [1] Add your files (BED & FASTA & GFF3) to the genome browser and verify that everything works as intended. Don't forget to [index](https://jbrowse.org/jb2/docs/cli/#jbrowse-text-index) the genome annotation, so you could later search by gene names.
@@ -290,6 +288,7 @@ sudo jbrowse add-track sort_chip_1.bed.gz --load copy --out /mnt/JBrowse/
 sudo jbrowse add-track sort_chip_2.bed.gz --load copy --out /mnt/JBrowse/
 sudo jbrowse add-track sort_chip_3.bed.gz --load copy --out /mnt/JBrowse/
 ```
+***link***: http://51.250.64.138/jbrowse/?session=local-gSyZldSiJ
 
 **Remember to put a [persistent link](https://jbrowse.org/jb2/docs/user_guides/basic_usage/#sharing-sessions) to a JBrowse 2 session with all your BED files and the genome annotation in the report (like [this](https://jbrowse.org/code/jb2/v2.3.1/?session=share-HShsEcnq3i&password=nYzTU)). I must be able to access it without problems.**
 
