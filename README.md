@@ -201,6 +201,17 @@ tabix sort_atac.bed.gz
 
 **JBrowse 2**
 * [1] Download and install [JBrowse 2](https://jbrowse.org/jb2/). Create a new jbrowse [repository](https://jbrowse.org/jb2/docs/cli/#jbrowse-create-localpath) in `/mnt/JBrowse/` (or some other folder).
+
+Instalment information got from [here](https://jbrowse.org/jb2/docs/quickstart_web/)
+
+```
+sudo apt install npm
+sudo npm install -g @jbrowse/cli
+
+# And for path from your source
+jbrowse create JBrowse
+```
+
 * [0.25] Install nginx and amend its config(/etc/nginx/nginx.conf) to contain the following section:
 ```conf
 http {
@@ -225,8 +236,41 @@ http {
   }
 }
 ```
+For that we do:
+
+```
+sudo apt-get install -y nginx
+```
+and then go to folder and vim file:
+```
+cd /etc/nginx
+sudo vim nginx.conf
+```
+And add that:
+
+```
+ # Add this:
+  server {
+    listen 80 default_server;
+    index index.html;
+    server_name _;
+
+    # Don't put JBrowse inside the home directory!
+    # You will have problems with permissions
+    location /jbrowse/ {
+      alias /saletyagin/JBrowse/;	
+    }
+  }
+```
 
 * [0.25] Restart the nginx (reload its config) and make sure that you can access the browser using a link like this: `http://64.129.58.13/jbrowse/`. Here `64.129.58.13` is your public IP address.
+
+To restart and access again:
+```
+sudo nginx -s reload
+http://51.250.64.138/jbrowse/
+```
+
 * [1] Add your files (BED & FASTA & GFF3) to the genome browser and verify that everything works as intended. Don't forget to [index](https://jbrowse.org/jb2/docs/cli/#jbrowse-text-index) the genome annotation, so you could later search by gene names.
 
 
