@@ -97,7 +97,7 @@ Here's my SSH-key, made with keygen:
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBr/VVkZTKCc92uN182gBXfhhg0B90ykxGtk5WJq15MG
 ```
 
-Achieves connection to the server with:
+Achieved connection to the server with:
 ```
 ssh -i /Users/stepanletyagin/Desktop/key.txt saletyagin@51.250.64.138
 ```
@@ -137,7 +137,7 @@ I found that [source](https://bmcbioinformatics.biomedcentral.com/articles/10.11
 wget https://github.com/billzt/gff3sort/archive/refs/tags/v1.0.0.tar.gz
 gunzip v1.0.0.tar.gz
 tar xvf v1.0.0.tar
-/home/saletyagin/gff3sort-1.0.0/gff3sort.pl --precise --chr_order natural Homo_sapiens.GRCh38.108.gff3 | bgzip > gff3.gff.gz
+/home/saletyagin/gff3sort-1.0.0/gff3sort.pl --precise --chr_order natural Homo_sapiens.GRCh38.108.gff3 | bgzip > file.gff.gz
 tabix -p gff file.gff.gz
 ```
 
@@ -271,8 +271,25 @@ sudo nginx -s reload
 http://51.250.64.138/jbrowse/
 ```
 
+<img width="1440" alt="Screenshot 2022-12-22 at 3 12 06 AM" src="https://user-images.githubusercontent.com/82548512/209027339-e806bdaa-a81f-4cff-a263-43b142d8d4e6.png">
+
+Works just fine.
+
 * [1] Add your files (BED & FASTA & GFF3) to the genome browser and verify that everything works as intended. Don't forget to [index](https://jbrowse.org/jb2/docs/cli/#jbrowse-text-index) the genome annotation, so you could later search by gene names.
 
+Adding genome assembly 
+```
+sudo /home/saletyagin/mnt/jbrowse add-assembly /home/saletyagin/Homo_sapiens.GRCh38.dna.primary_assembly.fa --load copy --out /mnt/jbrowse/
+```
+
+Indexing and adding tracks:
+```
+sudo jbrowse add-track file.gff.gz --load copy --out /mnt/JBrowse/
+sudo jbrowse add-track sort_atac.bed.gz --load copy --out /mnt/JBrowse/
+sudo jbrowse add-track sort_chip_1.bed.gz --load copy --out /mnt/JBrowse/
+sudo jbrowse add-track sort_chip_2.bed.gz --load copy --out /mnt/JBrowse/
+sudo jbrowse add-track sort_chip_3.bed.gz --load copy --out /mnt/JBrowse/
+```
 
 **Remember to put a [persistent link](https://jbrowse.org/jb2/docs/user_guides/basic_usage/#sharing-sessions) to a JBrowse 2 session with all your BED files and the genome annotation in the report (like [this](https://jbrowse.org/code/jb2/v2.3.1/?session=share-HShsEcnq3i&password=nYzTU)). I must be able to access it without problems.**
 
