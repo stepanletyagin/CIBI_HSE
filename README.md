@@ -280,7 +280,7 @@ Adding genome assembly
 sudo jbrowse add-assembly Homo_sapiens.GRCh38.dna.primary_assembly.fa --load copy --out /mnt/JBrowse/
 ```
 
-We probably should also do that also before, but I am still not sure of that:
+We should also do that before:
 
 ```
 awk '{gsub(/^chr/,""); print}' $sort_chip_1.bed > $(echo $sort_chip_1.bed| cut -d '.' -f 1)'_renamed.bed'
