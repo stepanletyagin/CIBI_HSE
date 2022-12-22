@@ -275,14 +275,6 @@ Works just fine.
 
 * [1] Add your files (BED & FASTA & GFF3) to the genome browser and verify that everything works as intended. Don't forget to [index](https://jbrowse.org/jb2/docs/cli/#jbrowse-text-index) the genome annotation, so you could later search by gene names.
 
-The next part was a hint for me from our classmate, beacuse BED and GFF chromosomes names differ in files we have to rename them:
-```
-awk '{gsub(/^chr/,""); print}' $sort_chip_1.bed > $(echo $sort_chip_1.bed| cut -d '.' -f 1)'_renamed.bed'
-awk '{gsub(/^chr/,""); print}' sort_chip_2.bed > $(echo sort_chip_2.bed| cut -d '.' -f 1)'_renamed.bed'
-awk '{gsub(/^chr/,""); print}' sort_chip_3.bed > $(echo sort_chip_3.bed| cut -d '.' -f 1)'_renamed.bed'
-awk '{gsub(/^chr/,""); print}' sort_atac.bed > $(echo sort_atac.bed| cut -d '.' -f 1)'_renamed.bed'
-```
-
 Adding genome assembly 
 ```
 sudo /home/saletyagin/mnt/jbrowse add-assembly /home/saletyagin/Homo_sapiens.GRCh38.dna.primary_assembly.fa --load copy --out /mnt/jbrowse/
@@ -291,12 +283,22 @@ sudo /home/saletyagin/mnt/jbrowse add-assembly /home/saletyagin/Homo_sapiens.GRC
 Indexing and adding tracks:
 ```
 sudo jbrowse add-track file.gff.gz --load copy --out /mnt/JBrowse/
-sudo jbrowse add-track sort_atac_renamed.bed.gz --load copy --out /mnt/JBrowse/
-sudo jbrowse add-track sort_chip_1_renamed.bed.gz --load copy --out /mnt/JBrowse/
-sudo jbrowse add-track sort_chip_2_renamed.bed.gz --load copy --out /mnt/JBrowse/
-sudo jbrowse add-track sort_chip_3_renamed.bed.gz --load copy --out /mnt/JBrowse/
+sudo jbrowse add-track sort_atac.bed.gz --load copy --out /mnt/JBrowse/
+sudo jbrowse add-track sort_chip_1.bed.gz --load copy --out /mnt/JBrowse/
+sudo jbrowse add-track sort_chip_2.bed.gz --load copy --out /mnt/JBrowse/
+sudo jbrowse add-track sort_chip_3.bed.gz --load copy --out /mnt/JBrowse/
 ```
 ***link***: http://51.250.64.138/jbrowse/?session=local-gSyZldSiJ
+
+p.s. We probably should also do that also before, but I am still not sure of that:
+
+```
+awk '{gsub(/^chr/,""); print}' $sort_chip_1.bed > $(echo $sort_chip_1.bed| cut -d '.' -f 1)'_renamed.bed'
+awk '{gsub(/^chr/,""); print}' sort_chip_2.bed > $(echo sort_chip_2.bed| cut -d '.' -f 1)'_renamed.bed'
+awk '{gsub(/^chr/,""); print}' sort_chip_3.bed > $(echo sort_chip_3.bed| cut -d '.' -f 1)'_renamed.bed'
+awk '{gsub(/^chr/,""); print}' sort_atac.bed > $(echo sort_atac.bed| cut -d '.' -f 1)'_renamed.bed'
+```
+beacuse BED and GFF chromosomes names differ in files we have to rename them. 
 
 **Remember to put a [persistent link](https://jbrowse.org/jb2/docs/user_guides/basic_usage/#sharing-sessions) to a JBrowse 2 session with all your BED files and the genome annotation in the report (like [this](https://jbrowse.org/code/jb2/v2.3.1/?session=share-HShsEcnq3i&password=nYzTU)). I must be able to access it without problems.**
 
